@@ -1,13 +1,13 @@
-package com.clubconnect.event;
+package com.example.memberservice;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class EventServiceApplication {
+public class MemberServiceApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(EventServiceApplication.class, args);
+		SpringApplication.run(MemberServiceApplication.class, args);
 	}
 
 }
