@@ -1,12 +1,12 @@
-package com.example.clubservice;
+package com.example.clubmanagement;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class ClubServiceApplication {
+public class ClubManagementApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(ClubServiceApplication.class, args);
+        SpringApplication.run(ClubManagementApplication.class, args);
     }
 }
