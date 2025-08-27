@@ -163,18 +163,3 @@ Each service is ready for REST API implementation. The structure follows Spring 
 - **PUT** endpoints for updating resources
 - **DELETE** endpoints for removing resources
 
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Commit your changes
-4. Push to the branch
-5. Create a Pull Request
-
-## 📄 License
-
-This project is licensed under the MIT License.
-
-## 🆘 Support
-
-For support and questions, please open an issue in the GitHub repository.
