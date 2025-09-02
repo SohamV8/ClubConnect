@@ -1,6 +1,7 @@
-package com.example.clubmanagement.model;
+package com.example.memberservice.model;
 
 import jakarta.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "members")
@@ -16,20 +17,27 @@ public class Member {
     @Column(nullable = false, unique = true)
     private String email;
     
-    @Column
     private String phone;
     
-    @ManyToOne
-    @JoinColumn(name = "club_id")
-    private Club club;
+    private String clubName;
+    
+    @Column(nullable = false)
+    private LocalDateTime joinDate;
+    
+    private String status;
     
     // Constructors
-    public Member() {}
+    public Member() {
+        this.joinDate = LocalDateTime.now();
+        this.status = "ACTIVE";
+    }
     
-    public Member(String name, String email, String phone) {
+    public Member(String name, String email, String phone, String clubName) {
+        this();
         this.name = name;
         this.email = email;
         this.phone = phone;
+        this.clubName = clubName;
     }
     
     // Getters and Setters
@@ -45,6 +53,12 @@ public class Member {
     public String getPhone() { return phone; }
     public void setPhone(String phone) { this.phone = phone; }
     
-    public Club getClub() { return club; }
-    public void setClub(Club club) { this.club = club; }
+    public String getClubName() { return clubName; }
+    public void setClubName(String clubName) { this.clubName = clubName; }
+    
+    public LocalDateTime getJoinDate() { return joinDate; }
+    public void setJoinDate(LocalDateTime joinDate) { this.joinDate = joinDate; }
+    
+    public String getStatus() { return status; }
+    public void setStatus(String status) { this.status = status; }
 }

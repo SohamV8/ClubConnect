@@ -2,17 +2,26 @@ package com.example.memberservice.controller;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
+import java.util.Map;
+import java.util.HashMap;
 
 @RestController
 public class MemberController {
 
     @GetMapping("/")
-    public String home() {
-        return "<h1>👥 Member Service</h1><p>Welcome to Member Management Service</p><p>Port: 8082</p>";
+    public Map<String, String> home() {
+        Map<String, String> response = new HashMap<>();
+        response.put("service", "Member Service");
+        response.put("port", "8082");
+        response.put("status", "running");
+        return response;
     }
 
     @GetMapping("/members")
-    public String getMembers() {
-        return "<h2>📋 Members List</h2><p>No members available yet</p>";
+    public Map<String, Object> getMembers() {
+        Map<String, Object> response = new HashMap<>();
+        response.put("message", "No members available yet");
+        response.put("count", 0);
+        return response;
     }
 }
