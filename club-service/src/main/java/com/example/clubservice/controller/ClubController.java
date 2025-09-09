@@ -1,18 +1,19 @@
 package com.example.clubservice.controller;
 
-import com.example.clubservice.model.Club;
-import com.example.clubservice.service.ClubService;
+import com.example.clubservice.dto.ClubDTO;
+import com.example.clubservice.service.EnhancedClubService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.Optional;
 
 @RestController
 public class ClubController {
 
     @Autowired
-    private ClubService clubService;
+    private EnhancedClubService enhancedClubService;
     
     @GetMapping("/")
     public Map<String, String> home() {
@@ -24,30 +25,50 @@ public class ClubController {
     }
 
     @GetMapping("/clubs")
-    public List<Club> getClubs() {
-        return clubService.getAllClubs();
+    public List<ClubDTO> getClubs() {
+        return enhancedClubService.getAllClubs();
     }
     
     @GetMapping("/clubs/{id}")
-    public Club getClub(@PathVariable Long id) {
-        return clubService.getClubById(id).orElse(null);
+    public ClubDTO getClub(@PathVariable Long id) {
+        Optional<ClubDTO> club = enhancedClubService.getClubById(id);
+        return club.orElse(null);
+    }
+
+    @GetMapping("/clubs/name/{name}")
+    public ClubDTO getClubByName(@PathVariable String name) {
+        Optional<ClubDTO> club = enhancedClubService.getClubByName(name);
+        return club.orElse(null);
+    }
+
+    @GetMapping("/clubs/validate/{name}")
+    public Map<String, Object> validateClub(@PathVariable String name) {
+        boolean exists = enhancedClubService.validateClubExists(name);
+        Map<String, Object> response = new HashMap<>();
+        response.put("exists", exists);
+        return response;
     }
     
     @PostMapping("/clubs")
-    public Club createClub(@RequestBody Club club) {
-        return clubService.createClub(club);
+    public ClubDTO createClub(@RequestBody ClubDTO clubDTO) {
+        return enhancedClubService.createClub(clubDTO);
     }
     
     @PutMapping("/clubs/{id}")
-    public Club updateClub(@PathVariable Long id, @RequestBody Club club) {
-        return clubService.updateClub(id, club);
+    public ClubDTO updateClub(@PathVariable Long id, @RequestBody ClubDTO clubDTO) {
+        return enhancedClubService.updateClub(id, clubDTO);
     }
     
     @DeleteMapping("/clubs/{id}")
     public Map<String, String> deleteClub(@PathVariable Long id) {
-        clubService.deleteClub(id);
+        enhancedClubService.deleteClub(id);
         Map<String, String> response = new HashMap<>();
         response.put("message", "Club deleted successfully");
         return response;
+    }
+
+    @GetMapping("/clubs/{name}/statistics")
+    public Map<String, Object> getClubStatistics(@PathVariable String name) {
+        return enhancedClubService.getClubStatistics(name);
     }
 }
