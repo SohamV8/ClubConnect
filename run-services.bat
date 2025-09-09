@@ -2,6 +2,14 @@
 echo Starting all ClubConnect services...
 
 echo.
+echo Starting Eureka Server on port 8761...
+start "Eureka Server" cmd /k "cd eureka-server && mvn spring-boot:run"
+
+echo.
+echo Starting API Gateway on port 8080...
+start "API Gateway" cmd /k "cd api-gateway && mvn spring-boot:run"
+
+echo.
 echo Starting Club Service on port 8081...
 start "Club Service" cmd /k "cd club-service && mvn spring-boot:run"
 
@@ -18,8 +26,7 @@ echo Starting Registration Service on port 8084...
 start "Registration Service" cmd /k "cd registration-service && mvn spring-boot:run"
 
 echo.
-echo Starting Movie Service on port 9003...
-start "Movie Service" cmd /k "cd Movie && mvn spring-boot:run"
+rem Movie Service not part of current setup
 
 echo.
 echo All services are starting...
