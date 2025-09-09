@@ -1,0 +1,442 @@
+{
+  "info": {
+    "name": "ClubConnect Microservices API",
+    "description": "Complete API collection for ClubConnect microservices with MySQL",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Eureka Server",
+      "item": [
+        {
+          "name": "Eureka Dashboard",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8761",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8761"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Club Service",
+      "item": [
+        {
+          "name": "Get All Clubs",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8081/clubs",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8081",
+              "path": ["clubs"]
+            }
+          }
+        },
+        {
+          "name": "Get Club by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8081/clubs/1",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8081",
+              "path": ["clubs", "1"]
+            }
+          }
+        },
+        {
+          "name": "Create Club",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Tech Club\",\n  \"description\": \"Technology enthusiasts club\",\n  \"category\": \"Technology\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8081/clubs",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8081",
+              "path": ["clubs"]
+            }
+          }
+        },
+        {
+          "name": "Update Club",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Advanced Tech Club\",\n  \"description\": \"Advanced technology enthusiasts club\",\n  \"category\": \"Technology\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8081/clubs/1",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8081",
+              "path": ["clubs", "1"]
+            }
+          }
+        },
+        {
+          "name": "Delete Club",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8081/clubs/1",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8081",
+              "path": ["clubs", "1"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Member Service",
+      "item": [
+        {
+          "name": "Get All Members",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8082/members",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8082",
+              "path": ["members"]
+            }
+          }
+        },
+        {
+          "name": "Get Member by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8082/members/1",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8082",
+              "path": ["members", "1"]
+            }
+          }
+        },
+        {
+          "name": "Create Member",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Alice Smith\",\n  \"email\": \"alice@example.com\",\n  \"phone\": \"123-456-7890\",\n  \"clubName\": \"Tech Club\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8082/members",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8082",
+              "path": ["members"]
+            }
+          }
+        },
+        {
+          "name": "Get Members by Club",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8082/members/club/Tech%20Club",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8082",
+              "path": ["members", "club", "Tech Club"]
+            }
+          }
+        },
+        {
+          "name": "Update Member",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Alice Johnson\",\n  \"email\": \"alice.johnson@example.com\",\n  \"phone\": \"987-654-3210\",\n  \"clubName\": \"Tech Club\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8082/members/1",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8082",
+              "path": ["members", "1"]
+            }
+          }
+        },
+        {
+          "name": "Delete Member",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8082/members/1",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8082",
+              "path": ["members", "1"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Event Service",
+      "item": [
+        {
+          "name": "Get All Events",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8083/events",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8083",
+              "path": ["events"]
+            }
+          }
+        },
+        {
+          "name": "Get Event by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8083/events/1",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8083",
+              "path": ["events", "1"]
+            }
+          }
+        },
+        {
+          "name": "Create Event",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Java Workshop\",\n  \"description\": \"Learn Java programming\",\n  \"location\": \"Room 101\",\n  \"dateTime\": \"2025-09-20T10:00:00\",\n  \"clubName\": \"Tech Club\",\n  \"maxCapacity\": 30\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8083/events",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8083",
+              "path": ["events"]
+            }
+          }
+        },
+        {
+          "name": "Get Upcoming Events",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8083/events/upcoming",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8083",
+              "path": ["events", "upcoming"]
+            }
+          }
+        },
+        {
+          "name": "Register Member for Event",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8083/events/1/register/1",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8083",
+              "path": ["events", "1", "register", "1"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Registration Service",
+      "item": [
+        {
+          "name": "Get All Registrations",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8084/registrations",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8084",
+              "path": ["registrations"]
+            }
+          }
+        },
+        {
+          "name": "Create Registration",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"memberId\": 1,\n  \"eventId\": 1,\n  \"memberName\": \"Alice Smith\",\n  \"eventName\": \"Java Workshop\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8084/registrations",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8084",
+              "path": ["registrations"]
+            }
+          }
+        },
+        {
+          "name": "Get Registrations by Member",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8084/registrations/member/1",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8084",
+              "path": ["registrations", "member", "1"]
+            }
+          }
+        },
+        {
+          "name": "Get Registrations by Event",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8084/registrations/event/1",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8084",
+              "path": ["registrations", "event", "1"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "API Gateway",
+      "item": [
+        {
+          "name": "Get Clubs via Gateway",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/clubs",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["clubs"]
+            }
+          }
+        },
+        {
+          "name": "Get Members via Gateway",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/members",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["members"]
+            }
+          }
+        },
+        {
+          "name": "Get Events via Gateway",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/events",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["events"]
+            }
+          }
+        },
+        {
+          "name": "Get Registrations via Gateway",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/registrations",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["registrations"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
