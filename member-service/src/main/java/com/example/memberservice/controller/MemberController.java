@@ -1,7 +1,7 @@
 package com.example.memberservice.controller;
 
 import com.example.memberservice.dto.MemberDTO;
-import com.example.memberservice.service.EnhancedMemberService;
+import com.example.memberservice.service.SimpleMemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
@@ -13,7 +13,7 @@ import java.util.Optional;
 public class MemberController {
 
     @Autowired
-    private EnhancedMemberService enhancedMemberService;
+    private SimpleMemberService simpleMemberService;
 
     @GetMapping("/")
     public Map<String, String> home() {
@@ -26,39 +26,39 @@ public class MemberController {
 
     @GetMapping("/members")
     public List<MemberDTO> getMembers() {
-        return enhancedMemberService.getAllMembers();
+        return simpleMemberService.getAllMembers();
     }
 
     @GetMapping("/members/{id}")
     public MemberDTO getMemberById(@PathVariable Long id) {
-        Optional<MemberDTO> member = enhancedMemberService.getMemberById(id);
+        Optional<MemberDTO> member = simpleMemberService.getMemberById(id);
         return member.orElse(null);
     }
 
     @GetMapping("/members/email/{email}")
     public MemberDTO getMemberByEmail(@PathVariable String email) {
-        Optional<MemberDTO> member = enhancedMemberService.getMemberByEmail(email);
+        Optional<MemberDTO> member = simpleMemberService.getMemberByEmail(email);
         return member.orElse(null);
     }
 
     @GetMapping("/members/club/{clubName}")
     public List<MemberDTO> getMembersByClub(@PathVariable String clubName) {
-        return enhancedMemberService.getMembersByClub(clubName);
+        return simpleMemberService.getMembersByClub(clubName);
     }
 
     @PostMapping("/members")
     public MemberDTO createMember(@RequestBody MemberDTO memberDTO) {
-        return enhancedMemberService.createMember(memberDTO);
+        return simpleMemberService.createMember(memberDTO);
     }
 
     @PutMapping("/members/{id}")
     public MemberDTO updateMember(@PathVariable Long id, @RequestBody MemberDTO memberDTO) {
-        return enhancedMemberService.updateMember(id, memberDTO);
+        return simpleMemberService.updateMember(id, memberDTO);
     }
 
     @DeleteMapping("/members/{id}")
     public Map<String, String> deleteMember(@PathVariable Long id) {
-        enhancedMemberService.deleteMember(id);
+        simpleMemberService.deleteMember(id);
         Map<String, String> response = new HashMap<>();
         response.put("message", "Member deleted successfully");
         return response;
@@ -66,6 +66,6 @@ public class MemberController {
 
     @GetMapping("/members/{id}/statistics")
     public Map<String, Object> getMemberStatistics(@PathVariable Long id) {
-        return enhancedMemberService.getMemberStatistics(id);
+        return simpleMemberService.getMemberStatistics(id);
     }
 }
