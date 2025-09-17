@@ -1,0 +1,70 @@
+# Member Service Configuration
+# This file contains configuration for the Member Service
+
+# Server Configuration
+server:
+  port: 8082
+
+# Application Configuration
+spring:
+  application:
+    name: member-service
+  
+  # Database Configuration
+  datasource:
+    url: jdbc:mysql://localhost:3306/memberdb
+    username: root
+    password: 2004
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 5
+      connection-timeout: 20000
+      idle-timeout: 300000
+      max-lifetime: 1200000
+
+# Eureka Client Configuration
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    prefer-ip-address: true
+    lease-renewal-interval-in-seconds: 30
+    lease-expiration-duration-in-seconds: 90
+
+# Management and Monitoring
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,configprops
+  endpoint:
+    health:
+      show-details: always
+
+# Logging Configuration
+logging:
+  level:
+    com.example.memberservice: INFO
+    org.springframework.cloud: DEBUG
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+
+# Custom Application Properties
+member:
+  service:
+    name: Member Management Service
+    description: Manages member information and club associations
+    version: 1.0.0
+    cache:
+      enabled: true
+      ttl: 300 # 5 minutes
+    validation:
+      name:
+        min-length: 2
+        max-length: 100
+      email:
+        pattern: "^[A-Za-z0-9+_.-]+@(.+)$"
+      phone:
+        pattern: "^[+]?[0-9\\s\\-\\(\\)]{10,15}$"

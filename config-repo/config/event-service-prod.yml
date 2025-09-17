@@ -1,0 +1,169 @@
+# Production Configuration for Event Service
+# This file contains production-optimized configuration for the Event Service
+
+# Server Configuration
+server:
+  port: 8083
+  # Enable compression
+  compression:
+    enabled: true
+    mime-types: application/json,application/xml,text/html,text/xml,text/plain
+    min-response-size: 1024
+  # Connection settings
+  connection-timeout: 20000
+  keep-alive-timeout: 15000
+  max-http-header-size: 8KB
+  max-http-post-size: 2MB
+
+# Application Configuration
+spring:
+  application:
+    name: event-service
+  
+  # Database Configuration - Production MySQL
+  datasource:
+    url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME:eventdb}?useSSL=true&serverTimezone=UTC&allowPublicKeyRetrieval=true
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD:2004}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      maximum-pool-size: 20
+      minimum-idle: 5
+      connection-timeout: 30000
+      idle-timeout: 600000
+      max-lifetime: 1800000
+      leak-detection-threshold: 60000
+      validation-timeout: 5000
+      connection-test-query: SELECT 1
+  
+  # JPA Configuration
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+        format_sql: false
+        use_sql_comments: false
+        jdbc:
+          batch_size: 20
+        order_inserts: true
+        order_updates: true
+
+# Eureka Client Configuration
+eureka:
+  client:
+    service-url:
+      defaultZone: ${EUREKA_URL:http://localhost:8761/eureka/}
+    register-with-eureka: true
+    fetch-registry: true
+    registry-fetch-interval-seconds: 30
+  instance:
+    prefer-ip-address: true
+    lease-renewal-interval-in-seconds: 30
+    lease-expiration-duration-in-seconds: 90
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+    metadata-map:
+      zone: ${ZONE:default}
+      region: ${REGION:us-east-1}
+
+# Management and Monitoring
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus,configprops
+      base-path: /actuator
+  endpoint:
+    health:
+      show-details: when-authorized
+      show-components: always
+    metrics:
+      enabled: true
+    prometheus:
+      enabled: true
+  info:
+    env:
+      enabled: true
+    java:
+      enabled: true
+    build:
+      enabled: true
+    git:
+      enabled: true
+      mode: full
+
+# Logging Configuration for Production
+logging:
+  level:
+    root: INFO
+    com.example.eventservice: INFO
+    org.springframework.cloud: WARN
+    org.springframework.security: WARN
+    org.hibernate.SQL: WARN
+    org.hibernate.type.descriptor.sql.BasicBinder: WARN
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
+  file:
+    name: logs/event-service.log
+    max-size: 100MB
+    max-history: 30
+
+# Custom Application Properties
+event:
+  service:
+    name: Event Management Service
+    description: Manages events and capacity control
+    version: 1.0.0
+    cache:
+      enabled: true
+      ttl: 600 # 10 minutes
+      max-size: 1000
+    validation:
+      name:
+        min-length: 3
+        max-length: 100
+      description:
+        max-length: 500
+      location:
+        max-length: 200
+      capacity:
+        min: 1
+        max: 1000
+    rate-limit:
+      enabled: true
+      requests-per-minute: 100
+    circuit-breaker:
+      enabled: true
+      failure-threshold: 5
+      timeout: 3000
+
+# Security Configuration
+spring:
+  security:
+    user:
+      name: ${SERVICE_USERNAME:event-service}
+      password: ${SERVICE_PASSWORD:event123}
+      roles: SERVICE
+
+# Application Information
+info:
+  app:
+    name: Event Management Service
+    description: Manages events and capacity control
+    version: 1.0.0
+    encoding: UTF-8
+    java:
+      version: 17
+  build:
+    artifact: event-service
+    group: com.example
+    name: event-service
+    version: 1.0.0
+  git:
+    branch: ${GIT_BRANCH:main}
+    commit:
+      id: ${GIT_COMMIT_ID:unknown}
+      time: ${GIT_COMMIT_TIME:unknown}

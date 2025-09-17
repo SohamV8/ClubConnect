@@ -1,0 +1,149 @@
+# Production Configuration for Config Server
+# This configuration is optimized for production deployment
+
+server:
+  port: 8888
+  # Enable compression
+  compression:
+    enabled: true
+    mime-types: application/json,application/xml,text/html,text/xml,text/plain
+    min-response-size: 1024
+
+spring:
+  application:
+    name: config-server
+  
+  # Production Config Server Configuration
+  cloud:
+    config:
+      server:
+        # Git repository configuration for production
+        git:
+          # Replace with your actual Git repository URL
+          uri: ${CONFIG_REPO_URL:https://github.com/your-org/clubconnect-config-repo}
+          # Default branch to use
+          default-label: ${CONFIG_BRANCH:main}
+          # Clone on startup for faster access
+          clone-on-start: true
+          # Force pull to get latest changes
+          force-pull: true
+          # Timeout for Git operations (in seconds)
+          timeout: 30
+          # Search paths within the repository
+          search-paths:
+            - config
+            - application-configs
+            - environments
+          # Username for private repositories
+          username: ${GIT_USERNAME:}
+          # Password or token for private repositories
+          password: ${GIT_PASSWORD:}
+          # SSH key configuration (alternative to username/password)
+          # private-key: ${GIT_PRIVATE_KEY:}
+          # passphrase: ${GIT_PASSPHRASE:}
+          # Strict host key checking
+          strict-host-key-checking: false
+          # Git configuration
+          basedir: ${java.io.tmpdir}/config-repo
+          # Refresh rate for Git repository
+          refresh-rate: 30
+      
+      # Server-side configuration
+      # Enable health check endpoint
+      health:
+        repositories:
+          default:
+            label: ${CONFIG_BRANCH:main}
+      # Enable encryption/decryption endpoints
+      encrypt:
+        enabled: true
+        # Encryption key (should be set via environment variable)
+        key: ${ENCRYPT_KEY:}
+
+# Security Configuration
+spring:
+  security:
+    user:
+      name: ${CONFIG_USERNAME:admin}
+      password: ${CONFIG_PASSWORD:admin123}
+      roles: ADMIN
+
+# Management and Monitoring
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,configprops,env,refresh,metrics,prometheus
+      base-path: /actuator
+  endpoint:
+    health:
+      show-details: when-authorized
+      show-components: always
+    info:
+      enabled: true
+    metrics:
+      enabled: true
+    prometheus:
+      enabled: true
+  info:
+    env:
+      enabled: true
+    java:
+      enabled: true
+    build:
+      enabled: true
+    git:
+      enabled: true
+      mode: full
+
+# Logging Configuration for Production
+logging:
+  level:
+    root: INFO
+    org.springframework.cloud.config: INFO
+    org.springframework.cloud.config.server: INFO
+    org.springframework.security: WARN
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
+  file:
+    name: logs/config-server.log
+    max-size: 100MB
+    max-history: 30
+
+# Application Information
+info:
+  app:
+    name: Config Server
+    description: Centralized configuration management for ClubConnect microservices
+    version: 1.0.0
+    encoding: UTF-8
+    java:
+      version: 17
+  build:
+    artifact: config-server
+    group: com.example
+    name: config-server
+    version: 1.0.0
+  git:
+    branch: ${CONFIG_BRANCH:main}
+    commit:
+      id: ${GIT_COMMIT_ID:unknown}
+      time: ${GIT_COMMIT_TIME:unknown}
+
+# Server Configuration
+server:
+  # Connection timeout
+  connection-timeout: 20000
+  # Keep-alive timeout
+  keep-alive-timeout: 15000
+  # Maximum HTTP header size
+  max-http-header-size: 8KB
+  # Maximum HTTP post size
+  max-http-post-size: 2MB
+  # Error pages
+  error:
+    include-message: always
+    include-binding-errors: always
+    include-stacktrace: on_param
+    include-exception: false

@@ -1,0 +1,68 @@
+# Club Service Configuration
+# This file contains configuration for the Club Service
+
+# Server Configuration
+server:
+  port: 8081
+
+# Application Configuration
+spring:
+  application:
+    name: club-service
+  
+  # Database Configuration
+  datasource:
+    url: jdbc:mysql://localhost:3306/clubdb
+    username: root
+    password: 2004
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 5
+      connection-timeout: 20000
+      idle-timeout: 300000
+      max-lifetime: 1200000
+
+# Eureka Client Configuration
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    prefer-ip-address: true
+    lease-renewal-interval-in-seconds: 30
+    lease-expiration-duration-in-seconds: 90
+
+# Management and Monitoring
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,configprops
+  endpoint:
+    health:
+      show-details: always
+
+# Logging Configuration
+logging:
+  level:
+    com.example.clubservice: INFO
+    org.springframework.cloud: DEBUG
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+
+# Custom Application Properties
+club:
+  service:
+    name: Club Management Service
+    description: Manages club information and statistics
+    version: 1.0.0
+    cache:
+      enabled: true
+      ttl: 300 # 5 minutes
+    validation:
+      name:
+        min-length: 3
+        max-length: 100
+      description:
+        max-length: 500

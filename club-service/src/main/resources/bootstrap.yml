@@ -1,0 +1,39 @@
+# Bootstrap Configuration for Club Service
+# This file is loaded before application.yml and contains configuration
+# needed to connect to the Config Server
+
+spring:
+  application:
+    name: club-service
+  
+  # Config Server Configuration
+  cloud:
+    config:
+      # Config Server URL
+      uri: http://localhost:8888
+      # Profile to use (default, dev, prod, etc.)
+      profile: default
+      # Label/branch to use
+      label: main
+      # Fail fast if config server is not available
+      fail-fast: true
+      # Retry configuration
+      retry:
+        initial-interval: 1000
+        max-attempts: 6
+        max-interval: 2000
+        multiplier: 1.1
+  
+  # Config import for Spring Boot 3.x
+  config:
+    import: optional:configserver:http://localhost:8888
+
+# Management endpoints for config refresh
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,refresh,configprops
+  endpoint:
+    health:
+      show-details: always

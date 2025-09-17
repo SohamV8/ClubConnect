@@ -1,0 +1,233 @@
+version: '3.8'
+
+services:
+  # MySQL Database
+  mysql:
+    image: mysql:8.0
+    container_name: clubconnect-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-2004}
+      MYSQL_DATABASE: clubdb
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./setup-mysql-databases.sql:/docker-entrypoint-initdb.d/setup.sql
+    networks:
+      - clubconnect-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+
+  # Config Server
+  config-server:
+    build:
+      context: ./config-server
+      dockerfile: Dockerfile
+    container_name: clubconnect-config-server
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      CONFIG_REPO_URL: ${CONFIG_REPO_URL:-https://github.com/your-org/clubconnect-config-repo}
+      CONFIG_BRANCH: ${CONFIG_BRANCH:-main}
+      CONFIG_USERNAME: ${CONFIG_USERNAME:-admin}
+      CONFIG_PASSWORD: ${CONFIG_PASSWORD:-admin123}
+      ENCRYPT_KEY: ${ENCRYPT_KEY:-mySecretKey123456789012345678901234567890}
+    ports:
+      - "8888:8888"
+    networks:
+      - clubconnect-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8888/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Eureka Server
+  eureka-server:
+    build:
+      context: ./eureka-server
+      dockerfile: Dockerfile
+    container_name: clubconnect-eureka-server
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+    ports:
+      - "8761:8761"
+    networks:
+      - clubconnect-network
+    depends_on:
+      - config-server
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8761/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # API Gateway
+  api-gateway:
+    build:
+      context: ./api-gateway
+      dockerfile: Dockerfile
+    container_name: clubconnect-api-gateway
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      EUREKA_URL: http://eureka-server:8761/eureka/
+    ports:
+      - "8080:8080"
+    networks:
+      - clubconnect-network
+    depends_on:
+      - eureka-server
+      - config-server
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Club Service
+  club-service:
+    build:
+      context: ./club-service
+      dockerfile: Dockerfile
+    container_name: clubconnect-club-service
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_NAME: clubdb
+      DB_USERNAME: root
+      DB_PASSWORD: ${DB_PASSWORD:-2004}
+      EUREKA_URL: http://eureka-server:8761/eureka/
+      CONFIG_URI: http://config-server:8888
+    ports:
+      - "8081:8081"
+    networks:
+      - clubconnect-network
+    depends_on:
+      - mysql
+      - eureka-server
+      - config-server
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8081/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Member Service
+  member-service:
+    build:
+      context: ./member-service
+      dockerfile: Dockerfile
+    container_name: clubconnect-member-service
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_NAME: memberdb
+      DB_USERNAME: root
+      DB_PASSWORD: ${DB_PASSWORD:-2004}
+      EUREKA_URL: http://eureka-server:8761/eureka/
+      CONFIG_URI: http://config-server:8888
+    ports:
+      - "8082:8082"
+    networks:
+      - clubconnect-network
+    depends_on:
+      - mysql
+      - eureka-server
+      - config-server
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8082/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Event Service
+  event-service:
+    build:
+      context: ./event-service
+      dockerfile: Dockerfile
+    container_name: clubconnect-event-service
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_NAME: eventdb
+      DB_USERNAME: root
+      DB_PASSWORD: ${DB_PASSWORD:-2004}
+      EUREKA_URL: http://eureka-server:8761/eureka/
+      CONFIG_URI: http://config-server:8888
+    ports:
+      - "8083:8083"
+    networks:
+      - clubconnect-network
+    depends_on:
+      - mysql
+      - eureka-server
+      - config-server
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8083/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Registration Service
+  registration-service:
+    build:
+      context: ./registration-service
+      dockerfile: Dockerfile
+    container_name: clubconnect-registration-service
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_NAME: registrationdb
+      DB_USERNAME: root
+      DB_PASSWORD: ${DB_PASSWORD:-2004}
+      EUREKA_URL: http://eureka-server:8761/eureka/
+      CONFIG_URI: http://config-server:8888
+    ports:
+      - "8084:8084"
+    networks:
+      - clubconnect-network
+    depends_on:
+      - mysql
+      - eureka-server
+      - config-server
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8084/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Nginx Load Balancer (Optional)
+  nginx:
+    image: nginx:alpine
+    container_name: clubconnect-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+      - ./ssl:/etc/nginx/ssl
+    networks:
+      - clubconnect-network
+    depends_on:
+      - api-gateway
+    restart: unless-stopped
+
+volumes:
+  mysql_data:
+
+networks:
+  clubconnect-network:
+    driver: bridge

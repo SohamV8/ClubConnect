@@ -1,0 +1,81 @@
+# Spring Cloud Config Server Configuration
+# This configuration sets up the Config Server to serve configuration from a Git repository
+
+server:
+  port: 8888
+
+spring:
+  application:
+    name: config-server
+  
+  # Config Server Configuration
+  cloud:
+    config:
+      server:
+        # Native profile for local file system (for development/testing)
+        native:
+          search-locations: classpath:/config,file:./config,file:./config-repo
+        
+        # Git configuration (for production)
+        # Uncomment and configure for production use
+        # git:
+        #   # Git repository URL containing configuration files
+        #   uri: https://github.com/your-org/clubconnect-config-repo
+        #   # Default branch to use
+        #   default-label: main
+        #   # Clone on startup for faster access
+        #   clone-on-start: true
+        #   # Force pull to get latest changes
+        #   force-pull: true
+        #   # Timeout for Git operations (in seconds)
+        #   timeout: 10
+        #   # Search paths within the repository
+        #   search-paths:
+        #     - config
+        #     - application-configs
+        #   # Username for private repositories (if needed)
+        #   username: ${GIT_USERNAME:}
+        #   # Password for private repositories (if needed)
+        #   password: ${GIT_PASSWORD:}
+        
+        # Server-side configuration
+        # Enable health check endpoint
+        health:
+          repositories:
+            default:
+              label: main
+        # Enable encryption/decryption endpoints
+        encrypt:
+          enabled: true
+
+# Management and Monitoring
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,configprops,env,refresh
+  endpoint:
+    health:
+      show-details: always
+  info:
+    env:
+      enabled: true
+
+# Logging Configuration
+logging:
+  level:
+    org.springframework.cloud.config: DEBUG
+    org.springframework.cloud.config.server: DEBUG
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+
+# Application Information
+info:
+  app:
+    name: Config Server
+    description: Centralized configuration management for ClubConnect microservices
+    version: 1.0.0
+    encoding: UTF-8
+    java:
+      version: 17
