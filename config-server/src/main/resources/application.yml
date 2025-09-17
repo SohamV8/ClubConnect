@@ -7,6 +7,8 @@ server:
 spring:
   application:
     name: config-server
+  profiles:
+    active: native
   
   # Config Server Configuration
   cloud:
@@ -15,38 +17,6 @@ spring:
         # Native profile for local file system (for development/testing)
         native:
           search-locations: classpath:/config,file:./config,file:./config-repo
-        
-        # Git configuration (for production)
-        # Uncomment and configure for production use
-        # git:
-        #   # Git repository URL containing configuration files
-        #   uri: https://github.com/your-org/clubconnect-config-repo
-        #   # Default branch to use
-        #   default-label: main
-        #   # Clone on startup for faster access
-        #   clone-on-start: true
-        #   # Force pull to get latest changes
-        #   force-pull: true
-        #   # Timeout for Git operations (in seconds)
-        #   timeout: 10
-        #   # Search paths within the repository
-        #   search-paths:
-        #     - config
-        #     - application-configs
-        #   # Username for private repositories (if needed)
-        #   username: ${GIT_USERNAME:}
-        #   # Password for private repositories (if needed)
-        #   password: ${GIT_PASSWORD:}
-        
-        # Server-side configuration
-        # Enable health check endpoint
-        health:
-          repositories:
-            default:
-              label: main
-        # Enable encryption/decryption endpoints
-        encrypt:
-          enabled: true
 
 # Management and Monitoring
 management:
